@@ -188,7 +188,7 @@ ip_input(const uint8_t *data, size_t len, struct net_device *dev)
     return;
   }
   if (cksum16((uint16_t *)hdr, hlen, 0) != 0) {
-    errorf("checksum error: sum=0x%04x, verify=0x%04x", ntoh16(hdr->sum), ntoh16(cksum16((uint16_t *)hdr, hlen, -hdr->sum)));
+    errorf("checksum error: sum=0x%04x, verify=0x%04x", ntoh16(hdr->sum), ntoh16(cksum16((uint16_t *)hdr, hlen, hdr->sum)));
     return;
   }
 
@@ -246,6 +246,7 @@ ip_output_core(struct ip_iface *iface, uint8_t protocol, const uint8_t *data, si
   hdr->offset = hton16(offset);
   hdr->ttl = 0xff;
   hdr->protocol = protocol;
+  hdr->sum = 0;
   hdr->sum = cksum16((uint16_t *)hdr, hlen, 0);
   hdr->src = src;
   hdr->dst = dst;
