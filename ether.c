@@ -87,7 +87,7 @@ ether_transmit_helper(struct net_device *dev, uint16_t type, const uint8_t *data
   flen = sizeof(*hdr) + len + pad;
   debugf("dev=%s, type=0x%04x, len=%zu", dev->name, type, flen);
   ether_dump(frame, flen);
-  return callback(dev, frame, len) == (ssize_t)flen ? 0 : -1;
+  return callback(dev, frame, flen) == (ssize_t)flen ? 0 : -1;
 }
 
 int

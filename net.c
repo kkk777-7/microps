@@ -135,7 +135,7 @@ net_device_output(struct net_device *dev, uint16_t type, const uint8_t *data, si
   debugf("dev=%s, type=0x%04x, len=%zu", dev->name, type, len);
   debugdump(data, len);
   if (dev->ops->transmit(dev, type, data, len, dst) == -1){
-    errorf("device transmit failure, dev=%s, len%zu", dev->name, len);
+    errorf("device transmit failure, dev=%s, len=%zu", dev->name, len);
     return -1;
   }
   return 0;
@@ -251,12 +251,17 @@ net_shutdown(void)
 
 #include "ip.h"
 #include "icmp.h"
+#include "arp.h"
 
 int
 net_init(void)
 {
   if (intr_init() == -1) {
     errorf("intr_init() failure");
+    return -1;
+  }
+  if (arp_init() == -1) {
+    errorf("arp_init() failure");
     return -1;
   }
   if (ip_init() == -1) {
